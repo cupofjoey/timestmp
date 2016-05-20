@@ -29,9 +29,19 @@ app.use(bodyParser.json());
 app.get('/:time', function (req, res) {
 	var resObject = {
 		"natural" : null,
-		"unix" : null
+		"unix" : null 
 	};
 	var time = req.params.time;
+	var timeInt = parseInt(time, 10);
+	if(timeInt && typeof timeInt == 'number'){
+		var naturalDate = new Date(timeInt*1000);
+		var day = naturalDate.getUTCDate();
+		var month = naturalDate.getUTCMonth();
+		var year = naturalDate.getUTCFullYear();
+		resObject.natural = monthNames[month] + " " + day + " " + year;
+		resObject.unix = timeInt;
+	}
+
 	var parsedTime = chrono.parse(time)[0];
 	console.log(parsedTime);
 	if(parsedTime){
