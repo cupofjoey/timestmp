@@ -4,7 +4,20 @@ var chrono = require('chrono-node')
 var app = express();
 
 
-
+var monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -19,9 +32,17 @@ app.get('/:time', function (req, res) {
 		"unix" : null
 	};
 	var time = req.params.time;
-	var parsedTime = chrono.parse(time);
-	resObject.unix = new Date(time).getTime() / 1000;
- 	//res.json(parsedTime);
+	var parsedTime = chrono.parse(time)[0];
+	console.log(parsedTime);
+	if(parsedTime){
+		var day = parsedTime.start.knownValues.day;
+		var month = monthNames[parsedTime.start.knownValues.month - 1];
+		var year = parsedTime.start.knownValues.year;
+		resObject.unix = new Date(time).getTime() / 1000;
+ 		//res.json(parsedTime);
+ 		resObject.natural = month + " " + day + " " + year;
+	}
+	
  	res.json(resObject);
 });
 
